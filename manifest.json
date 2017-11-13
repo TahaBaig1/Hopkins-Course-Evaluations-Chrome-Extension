@@ -17,5 +17,5 @@
 		"persistent": false
 	},
 
-	"permissions": ["tabs"]
+	"permissions": ["tabs", "https://jhu-course-evaluations.herokuapp.com/*"]
 }
