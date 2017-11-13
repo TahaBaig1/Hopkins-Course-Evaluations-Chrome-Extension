@@ -1,0 +1,37 @@
+.popup-wrapper {
+    position: relative;
+}
+
+.popupdata {
+    display: inline-block;
+    visibility: hidden;
+    width: 540px;
+    background-color: #014274;
+    color: #fff;
+    text-align: left;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 10000;
+    bottom: 85%;
+    left: 50%;
+    margin-left: -270px;
+    padding: 20px;
+}
+
+.popupdata::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+.course-data-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+

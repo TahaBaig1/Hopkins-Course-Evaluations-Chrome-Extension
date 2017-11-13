@@ -1,5 +1,6 @@
 $("document").ready( () => {
 	insertEvalData();
+
 });
 
 function insertEvalData() {
@@ -46,11 +47,16 @@ function insertEvalData() {
 
 //appends course eval data onto the HTML of the page
 function appendData(elem, coursesData) {
+	
+	//adding average course ratings
 	var avgRating = getAverageRating(coursesData);
 	if (avgRating != -1) {
 		var $rating = $("<span class = 'rating'> Rating: " + avgRating.toFixed(2) + "</span>");
 		$(elem).append($rating);
 	}
+
+	//adding popup of summaries of student comments
+	createSummariesPopup(elem, coursesData);
 }
 
 //Makes AJAX request to API to collect evaluations data 
@@ -58,6 +64,30 @@ function appendData(elem, coursesData) {
 function requestData(query, elem, callback) {
 	chrome.runtime.sendMessage({"action": "getCoursesData", "coursesQuery": query}, (data) => {
 		callback(elem, data);
+	});
+}
+
+function createSummariesPopup(elem, coursesData) {
+	if (coursesData.length == 0) return;
+
+	$(elem).addClass("popup-wrapper");
+
+	$popupData = $("<div class = 'popupdata'> </div>");
+	$popupData.append("<div class = 'course-data-container'>" + 
+					  "<span> Semester: " + coursesData[0].semester + "</span>" +
+					  "<span> Rating: " + coursesData[0].rating + "</span>" +
+					  "<span> Professor(s): " + coursesData[0].professor + "</span>" +
+					  "</div>");
+	$popupData.append("<p> " + $.trim(coursesData[0].summary) + " </p>");
+
+	$(elem).append($popupData);
+
+	$(elem).on("mouseenter", function() {
+		$(this).children(".popupdata").css("visibility", "visible");
+	});
+
+	$(elem).on("mouseleave", function() {
+		$(this).children(".popupdata").css("visibility", "hidden");
 	});
 }
 
