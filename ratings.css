@@ -1,0 +1,9 @@
+.rating {
+	font-family: "arial";
+	font-size: 12px;
+	color: #428bca;
+}
+
+.rating:hover {
+	text-decoration: underline;
+}

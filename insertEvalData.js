@@ -37,15 +37,20 @@ function insertEvalData() {
 				//appending data in professors column
 				var profElem = $cols.get(profCol);
 				var professorQuery = { "number": numElem.innerText, "professor": profElem.innerText };
-				requestData(professorQuery, numElem, appendData);
+				requestData(professorQuery, profElem, appendData);
 	 		});
 
 		}
 	});
 }
 
+//appends course eval data onto the HTML of the page
 function appendData(elem, coursesData) {
-	//TODO: Create function that appends data returned from API into HTML of page
+	var avgRating = getAverageRating(coursesData);
+	if (avgRating != -1) {
+		var $rating = $("<span class = 'rating'> Rating: " + avgRating.toFixed(2) + "</span>");
+		$(elem).append($rating);
+	}
 }
 
 //Makes AJAX request to API to collect evaluations data 
@@ -54,6 +59,21 @@ function requestData(query, elem, callback) {
 	chrome.runtime.sendMessage({"action": "getCoursesData", "coursesQuery": query}, (data) => {
 		callback(elem, data);
 	});
+}
+
+function getAverageRating(coursesData) {
+	var sum = 0;
+	var count = 0;
+
+	for (var i = 0; i < coursesData.length; i++)  {
+		if (coursesData[i].hasOwnProperty("rating") && !isNaN( parseFloat(coursesData[i].rating) ) ) {
+			sum += coursesData[i].rating;
+			count++;
+		}
+	}
+
+	if (count == 0) return -1; //indicates course has no ratings so far
+	return sum / count;
 }
 
 
