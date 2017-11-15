@@ -42,22 +42,21 @@
   border-width: 7px;
   position: absolute;
   cursor: pointer;
+  top: 50%;
 }
 
 .left {
 	border-top-color: transparent;
     border-bottom-color: transparent;
     border-left-width: 0;
-    left: 1%;
-    top: 50%;
+    left: 2%;
 }
 
 .right {
 	border-top-color: transparent;
     border-bottom-color: transparent;
     border-right-width: 0;
-    right: 1%;
-    top: 50%;
+    right: 2%;
 }
 
 

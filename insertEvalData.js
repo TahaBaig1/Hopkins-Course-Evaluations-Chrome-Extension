@@ -29,12 +29,12 @@ function insertEvalData() {
 			$("#results .odd").add(".even").each(function() {
 				var $cols = $(this).children("td");
 				
-				//appending data in courses column
+				//appending data in courses column: ratings and comments for course for each semester taught
 				var numElem = $cols.get(numCol);
 				var numberQuery = { "number": numElem.innerText };
 				requestData(numberQuery, numElem, appendData);
 
-				//appending data in professors column
+				//appending data in professors column: ratings and comments for course for each semester taught by professor
 				var profElem = $cols.get(profCol);
 				var professorQuery = { "number": numElem.innerText, "professor": profElem.innerText };
 				requestData(professorQuery, profElem, appendData);
@@ -54,53 +54,117 @@ function appendData(elem, coursesData) {
 		$(elem).append($rating);
 	}
 
-	//adding popup of summaries of student comments
+	//adding popup including summaries of student comments alongisde ratings for each semester course was taught
 	createSummariesPopup(elem, coursesData);
 }
 
 //Makes AJAX request to API to collect evaluations data 
 //appends data to page utilizing passed in element and callback function
 function requestData(query, elem, callback) {
+	//sending message to event page to carry out AJAX request and send back recieved data
 	chrome.runtime.sendMessage({"action": "getCoursesData", "coursesQuery": query}, (data) => {
 		callback(elem, data);
 	});
 }
 
 function createSummariesPopup(elem, coursesData) {
-	if (coursesData.length == 0) return;
-
-	//TODO: Implement for all semesters in courseData
-	//make data say 'N/A' if it is not present
+	var length = coursesData.length;
+	if (length == 0) return;
 
 	$(elem).addClass("popup-wrapper");
 
-	$popupData = $("<div class = 'popupdata'> </div>");
-	$popupData.append("<div class = 'course-data-container'>" + 
-					  	"<span> Semester: " + coursesData[0].semester + "</span>" +
-					  	"<span> Rating: " + coursesData[0].rating + "</span>" +
-					  	"<span> Professor(s): " + coursesData[0].professor + "</span>" +
-					  "</div>");
-	$popupData.append("<p> " + $.trim(coursesData[0].summary) + " </p>");
-	$popupData.append("<div class = 'arrow right'> </div>");
-	$popupData.append("<div class = 'arrow left'> </div>");
+	if (length == 1) {
+		//do not include arrrows
+		var $popupData = setUpPopupData(elem, coursesData[0]);
+		$(elem).append($popupData);
+	} else {
+		//append all course data popups to page, one for each semester's course returned from API, (all intially hidden)
 
-	$(elem).append($popupData);
+		//first course does not need left arrow
+		$popupData = setUpPopupData(elem, coursesData[0]);
+		$popupData.append("<div class = 'arrow right'> </div>");
+		$(elem).append($popupData);
 
+		for (var i = 1; i < length-1; i++) {
+			$popupData = setUpPopupData(elem, coursesData[i]);
+			$popupData.append("<div class = 'arrow right'> </div>");
+			$popupData.append("<div class = 'arrow left'> </div>");
+
+			$(elem).append($popupData);
+		}
+
+		//last course does need right arrow
+		$popupData = setUpPopupData(elem, coursesData[length-1]);
+		$popupData.append("<div class = 'arrow left'> </div>");
+		$(elem).append($popupData);
+	}
+
+	//add event listeners
 	$(elem).on("mouseenter", function() {
-		$(this).children(".popupdata").css("visibility", "visible");
+		var $popupData = $(this).children(".popupdata");
+		$popupData.first().css("visibility", "visible");
+
+		$popupData.find(".right").on("click", function() {
+			var $course = $(this).parent();			
+			var $next = $course.next();
+			if ($next.length != 0) {
+				$course.css("visibility", "hidden");
+				$next.css("visibility", "visible");
+			}
+		});
+
+		$popupData.find(".left").on("click", function() {
+			var $course = $(this).parent();
+			var $prev = $course.prev();
+			if ($prev.length != 0) 	{
+				$course.css("visibility", "hidden");				
+				$prev.css("visibility", "visible");
+			}
+		});
 	});
 
 	$(elem).on("mouseleave", function() {
 		$(this).children(".popupdata").css("visibility", "hidden");
+		$(this).find(".arrow").off();
 	});
+}
+
+function setUpPopupData(elem, courseData) {
+	var semester = "N/A", rating = "N/A", professor= "N/A", summmary = "N/A";
+
+	if (courseData.hasOwnProperty("semester")) {
+		semester = courseData.semester;
+	} 
+
+	if (courseData.hasOwnProperty("rating") && isFloat(courseData.rating)) {
+		rating = courseData.rating;
+	}
+
+	if (courseData.hasOwnProperty("professor")) {
+		professor = courseData.professor;
+	}
+
+	if (courseData.hasOwnProperty("summary")) {
+		summary = courseData.summary;
+	}
+
+	var $popupData = $("<div class = 'popupdata'> </div>");
+	$popupData.append("<div class = 'course-data-container'>" + 
+					  	"<span> Semester: " + semester + "</span>" +
+					  	"<span> Rating: " + rating + "</span>" +
+					  	"<span> Professor(s): " + professor + "</span>" +
+					  "</div>");
+	$popupData.append("<p> " + $.trim(summary) + " </p>");
+	return $popupData;
 }
 
 function getAverageRating(coursesData) {
 	var sum = 0;
 	var count = 0;
 
-	for (var i = 0; i < coursesData.length; i++)  {
-		if (coursesData[i].hasOwnProperty("rating") && !isNaN( parseFloat(coursesData[i].rating) ) ) {
+	var length = coursesData.length;
+	for (var i = 0; i < length; i++)  {
+		if (coursesData[i].hasOwnProperty("rating") && isFloat(coursesData[i].rating)) {
 			sum += coursesData[i].rating;
 			count++;
 		}
@@ -110,5 +174,6 @@ function getAverageRating(coursesData) {
 	return sum / count;
 }
 
-
-
+function isFloat(string) {
+	return !isNaN(parseFloat(string));
+}
