@@ -15,7 +15,7 @@
     bottom: 85%;
     left: 50%;
     margin-left: -270px;
-    padding: 20px;
+    padding: 20px 30px 20px 30px;
 }
 
 .popupdata::after {
@@ -26,12 +26,39 @@
     margin-left: -5px;
     border-width: 5px;
     border-style: solid;
-    border-color: #555 transparent transparent transparent;
+    border-color: #014274 transparent transparent transparent;
 }
 
 .course-data-container {
     display: flex;
     justify-content: space-between;
 }
+
+.arrow {
+  width: 0;
+  height: 0;
+  border: solid;
+  border-color: black;
+  border-width: 7px;
+  position: absolute;
+  cursor: pointer;
+}
+
+.left {
+	border-top-color: transparent;
+    border-bottom-color: transparent;
+    border-left-width: 0;
+    left: 1%;
+    top: 50%;
+}
+
+.right {
+	border-top-color: transparent;
+    border-bottom-color: transparent;
+    border-right-width: 0;
+    right: 1%;
+    top: 50%;
+}
+
 
 

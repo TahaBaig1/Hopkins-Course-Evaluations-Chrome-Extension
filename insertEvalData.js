@@ -1,6 +1,5 @@
-$("document").ready( () => {
+$("document").ready(() => {
 	insertEvalData();
-
 });
 
 function insertEvalData() {
@@ -41,7 +40,7 @@ function insertEvalData() {
 				requestData(professorQuery, profElem, appendData);
 	 		});
 
-		}
+		};
 	});
 }
 
@@ -70,15 +69,20 @@ function requestData(query, elem, callback) {
 function createSummariesPopup(elem, coursesData) {
 	if (coursesData.length == 0) return;
 
+	//TODO: Implement for all semesters in courseData
+	//make data say 'N/A' if it is not present
+
 	$(elem).addClass("popup-wrapper");
 
 	$popupData = $("<div class = 'popupdata'> </div>");
 	$popupData.append("<div class = 'course-data-container'>" + 
-					  "<span> Semester: " + coursesData[0].semester + "</span>" +
-					  "<span> Rating: " + coursesData[0].rating + "</span>" +
-					  "<span> Professor(s): " + coursesData[0].professor + "</span>" +
+					  	"<span> Semester: " + coursesData[0].semester + "</span>" +
+					  	"<span> Rating: " + coursesData[0].rating + "</span>" +
+					  	"<span> Professor(s): " + coursesData[0].professor + "</span>" +
 					  "</div>");
 	$popupData.append("<p> " + $.trim(coursesData[0].summary) + " </p>");
+	$popupData.append("<div class = 'arrow right'> </div>");
+	$popupData.append("<div class = 'arrow left'> </div>");
 
 	$(elem).append($popupData);
 
