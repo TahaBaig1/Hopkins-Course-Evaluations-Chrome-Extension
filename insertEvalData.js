@@ -80,47 +80,37 @@ function createSummariesPopup(elem, coursesData) {
 	} else {
 		//append all course data popups to page, one for each semester's course returned from API, (all intially hidden)
 
-		//first course does not need left arrow
-		$popupData = setUpPopupData(elem, coursesData[0]);
-		$popupData.append("<div class = 'arrow right'> </div>");
-		$(elem).append($popupData);
-
-		for (var i = 1; i < length-1; i++) {
+		for (var i = 0; i < length; i++) {
 			$popupData = setUpPopupData(elem, coursesData[i]);
 			$popupData.append("<div class = 'arrow right'> </div>");
 			$popupData.append("<div class = 'arrow left'> </div>");
 
 			$(elem).append($popupData);
 		}
-
-		//last course does need right arrow
-		$popupData = setUpPopupData(elem, coursesData[length-1]);
-		$popupData.append("<div class = 'arrow left'> </div>");
-		$(elem).append($popupData);
 	}
 
 	//add event listeners
 	$(elem).on("mouseenter", function() {
 		var $popupData = $(this).children(".popupdata");
 		$popupData.first().css("visibility", "visible");
+		var length = $popupData.length;
+
+		var curr = 0;
 
 		$popupData.find(".right").on("click", function() {
-			var $course = $(this).parent();			
-			var $next = $course.next();
-			if ($next.length != 0) {
-				$course.css("visibility", "hidden");
-				$next.css("visibility", "visible");
-			}
+			console.log(curr);
+			$popupData.eq(curr).css("visibility", "hidden");
+			curr = (curr + 1) % length;
+			$popupData.eq(curr).css("visibility", "visible");			
 		});
 
 		$popupData.find(".left").on("click", function() {
-			var $course = $(this).parent();
-			var $prev = $course.prev();
-			if ($prev.length != 0) 	{
-				$course.css("visibility", "hidden");				
-				$prev.css("visibility", "visible");
-			}
+			console.log(curr);
+			$popupData.eq(curr).css("visibility", "hidden");
+			curr = curr - 1 > 0 ? curr - 1 : length - 1;
+			$popupData.eq(curr).css("visibility", "visible");			
 		});
+
 	});
 
 	$(elem).on("mouseleave", function() {
