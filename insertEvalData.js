@@ -107,7 +107,7 @@ function createSummariesPopup(elem, coursesData) {
 		$popupData.find(".left").on("click", function() {
 			console.log(curr);
 			$popupData.eq(curr).css("visibility", "hidden");
-			curr = curr - 1 > 0 ? curr - 1 : length - 1;
+			curr = curr - 1 >= 0 ? curr - 1 : length - 1;
 			$popupData.eq(curr).css("visibility", "visible");			
 		});
 
