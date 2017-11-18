@@ -4,4 +4,7 @@ Chrome Extension that makes AJAX requests to an API that I previously created th
 This extension takes evaluation data obtained from the API and integrates it directly onto Johns Hopkins course search via inserted text and pop-up bubbles.
 
 
-The code for the API mentioned above alongside instructions on how to use it can be found here: https://github.com/TahaBaig1/HopkinsCourseEvaluationsAPI
+The code for the API mentioned above can be found here: https://github.com/TahaBaig1/HopkinsCourseEvaluationsAPI
+
+![](https://tahabaig1.github.io/images/HopkinsEvaluations_1.png)
+
