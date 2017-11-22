@@ -75,13 +75,12 @@ function createSummariesPopup(elem, coursesData) {
 
 	if (length == 1) {
 		//do not include arrrows
-		var $popupData = setUpPopupData(elem, coursesData[0]);
+		var $popupData = setUpPopupData(coursesData[0]);
 		$(elem).append($popupData);
 	} else {
 		//append all course data popups to page, one for each semester's course returned from API, (all intially hidden)
-
 		for (var i = 0; i < length; i++) {
-			$popupData = setUpPopupData(elem, coursesData[i]);
+			$popupData = setUpPopupData(coursesData[i]);
 			$popupData.append("<div class = 'arrow right'> </div>");
 			$popupData.append("<div class = 'arrow left'> </div>");
 
@@ -97,15 +96,14 @@ function createSummariesPopup(elem, coursesData) {
 
 		var curr = 0;
 
+		//adding slider functionality
 		$popupData.find(".right").on("click", function() {
-			console.log(curr);
 			$popupData.eq(curr).css("visibility", "hidden");
 			curr = (curr + 1) % length;
 			$popupData.eq(curr).css("visibility", "visible");			
 		});
 
 		$popupData.find(".left").on("click", function() {
-			console.log(curr);
 			$popupData.eq(curr).css("visibility", "hidden");
 			curr = curr - 1 >= 0 ? curr - 1 : length - 1;
 			$popupData.eq(curr).css("visibility", "visible");			
@@ -119,24 +117,12 @@ function createSummariesPopup(elem, coursesData) {
 	});
 }
 
-function setUpPopupData(elem, courseData) {
-	var semester = "N/A", rating = "N/A", professor= "N/A", summmary = "N/A";
-
-	if (courseData.hasOwnProperty("semester")) {
-		semester = courseData.semester;
-	} 
-
-	if (courseData.hasOwnProperty("rating") && isFloat(courseData.rating)) {
-		rating = courseData.rating;
-	}
-
-	if (courseData.hasOwnProperty("professor")) {
-		professor = courseData.professor;
-	}
-
-	if (courseData.hasOwnProperty("summary")) {
-		summary = courseData.summary;
-	}
+function setUpPopupData(courseData) {
+	var semester = courseData.hasOwnProperty("semester")   ? courseData.semester : "N/A";
+	var rating = courseData.hasOwnProperty("rating")
+				 && isFloat(courseData.rating)             ? courseData.rating : "N/A";
+	var professor = courseData.hasOwnProperty("professor") ? courseData.professor : "N/A";
+	var summary = courseData.hasOwnProperty("summary")     ? courseData.summary : "N/A";
 
 	var $popupData = $("<div class = 'popupdata'> </div>");
 	$popupData.append("<div class = 'course-data-container'>" + 

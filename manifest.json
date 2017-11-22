@@ -7,13 +7,13 @@
 	"content_scripts": [
 		{
 			"matches": ["https://sis.jhu.edu/*"],
-			"css": ["ratings.css", "popup.css"],
-			"js": ["jquery-3.2.1.min.js", "insertEvalData.js"]
+			"css": ["./src/css/ratings.css", "./src/css/popup.css"],
+			"js": ["./src/js/jquery-3.2.1.min.js", "./src/js/insertEvalData.js"]
 		}
 	],
 
 	"background": {
-		"scripts": ["jquery-3.2.1.min.js", "requests.js"],
+		"scripts": ["./src/js/jquery-3.2.1.min.js", "./src/js/requests.js"],
 		"persistent": false
 	},
 
