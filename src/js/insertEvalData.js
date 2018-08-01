@@ -5,7 +5,7 @@ $("document").ready(() => {
 function insertEvalData() {
 	//determine URL of course selection site before appending data
 	chrome.runtime.sendMessage({"action": "getTabURL"}, (url) => {
-		if (url.startsWith("https://sis.jhu.edu/sswf/SSS/SearchForClasses/SSS_ClassResults.aspx")) {
+		if (url.includes("SearchForClasses")) {
 			//find location of course number and instructor column on course selection table
 			var numCol = -1;
 			var profCol = -1;
@@ -24,7 +24,6 @@ function insertEvalData() {
 
 			//if locations are not found, then there is no where to insert data, exit
 			if (numCol == -1 || profCol == -1) return;
-
 			//appending data 
 			$("#results .odd").add(".even").each(function() {
 				var $cols = $(this).children("td");
