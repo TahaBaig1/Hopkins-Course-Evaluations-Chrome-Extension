@@ -12,9 +12,10 @@ function insertEvalData() {
 
 			var count = 0;
 			$("#results .header td").each(function() {
-				if (this.innerText == "Class #") {
+				var trimText = this.innerText.trim();
+				if (trimText == "Class #") {
 					numCol = count;
-				} else if (this.innerText == "Instructor(s)") {
+				} else if (trimText == "Instructor(s)") {
 					profCol = count;
 				}
 
